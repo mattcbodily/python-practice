@@ -1,3 +1,5 @@
+from string import Template
+
 class Hero:
     def __init__(self, name):
         self.name = name
@@ -10,7 +12,8 @@ class Hero:
         self.special_attack = 4
         self.defense = 2
         self.monsters_killed = 0
-        self.coins = 0
+        self.coins = 0,
+        self.inventory = []
 
 class Monster:
     def __init__(self, monster, health, attack, defense):
@@ -18,6 +21,8 @@ class Monster:
         self.health = health
         self.attack = attack
         self.defense = defense
+
+shop_items = ({'Name': 'Potion', 'Cost': '5'}, {'Name': 'Armor', 'Cost': '25'})
 
 def fight_logic(enemy):
     print('You start to fight a', enemy.monster)
@@ -62,7 +67,16 @@ def monster_fight():
     fight_logic(new_enemy)
 
 def enter_shop():
-    print("Shop in progress")
+    item_num = 1
+    print('Welcome to the Shop! What would you like to buy?')
+    for x in shop_items:
+        item_print = Template('$item_num: $item_name for $item_cost gold')
+        print(item_print.substitute(item_num=item_num, item_name=x["Name"], item_cost=x["Cost"]))
+        item_num += 1
+    exit_prompt = Template('$item_num: Leave Shop')
+    print(exit_prompt.substitute(item_num=item_num))
+    ans = input('Select an option ')
+
 
 def begin_travel():
     print("Travel in progress")
@@ -70,7 +84,7 @@ def begin_travel():
 def game_play():
     print("What would you like to do?")
     print("1: Fight")
-    print("2: Rest")
+    print("2: Shop")
     print("3: Travel")
     print("4: View Stats")
     ans = input("Select a number: ")
@@ -78,9 +92,7 @@ def game_play():
     if ans == "1":
         monster_fight()
     elif ans == "2":
-        print("You rest and restore your health")
-        user_hero.health = 10
-        game_play()
+        enter_shop()
     elif ans == "3":
         begin_travel()
     elif ans == "4":
